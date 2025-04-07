@@ -34,8 +34,8 @@ public:
     BoggleBoard(const Dictionary& dict, const string& wordListFileName); // Default constructor
     BoggleBoard(const BoggleBoard& orig) { _copy(orig); } // Copy constructor
     BoggleBoard& operator=(const BoggleBoard& orig); // Copy assignment operator
-    ~BoggleBoard() { _dict = nullptr; } // Destructor
-    
+    ~BoggleBoard() = default;
+
     // Method to begin playing the game.
     void play(ostream& outputStream);
     // Method to print the board.
