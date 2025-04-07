@@ -20,11 +20,8 @@ void BoggleBoard::_copy(const BoggleBoard& orig)
 BoggleBoard::BoggleBoard(const Dictionary& dict, const string& wordListFileName)
 {
     _dict = &dict; // point _dict at the built dictionary
-    _frequencyTable.assign(26, 0); // size vector to 26, all set to 0
-    _frequencySum = 0;
-
-    _buildFrequencyTable(wordListFileName);
-    _calcFrequencySum();
+    _frequencyTable = _buildFrequencyTable(wordListFileName);
+    _frequencySum = _calcFrequencySum();
     _buildBoard();
 }
 
@@ -103,34 +100,41 @@ void BoggleBoard::_buildBoard()
     }
 }
 
-void BoggleBoard::_buildFrequencyTable(const string& wordListFileName)
+vector<int> BoggleBoard::_buildFrequencyTable(const string& wordListFileName) const
 {
+    vector<int> table(26, 0); // local frequency table
+
     // read from dict file
     ifstream fin(wordListFileName);
     
     if (!fin)
     {
-        cerr << "ERROR: unable to read from file" << endl;
-        return; // frequencyTable remains all 0
+        cerr << "ERROR: unable to read from file '" << wordListFileName << "'" << endl;
+    }
+    else // file exists, so good to go
+    {
+        string word;
+    
+        // populate frequency table word by word
+        while (fin >> word)
+            for (char letter : word)
+                // handle rogue spaces in dict files
+                if (isalpha(letter))
+                    table[tolower(letter)-'a']++;
+        
+        // ensure proper file closure
+        fin.close();
     }
 
-    string word;
-
-    // populate frequency table word by word
-    while (fin >> word)
-        for (char letter : word)
-            // some words end with a space in the dict file
-            if (isalpha(letter))
-                _frequencyTable[tolower(letter)-'a']++;
-    
-    // ensure proper file closure
-    fin.close();
+    return table;
 }
 
-void BoggleBoard::_calcFrequencySum()
+int BoggleBoard::_calcFrequencySum() const
 {
+    int sum = 0;
     for (int num : _frequencyTable)
-        _frequencySum += num;
+        sum += num;
+    return sum;
 }
 
 string BoggleBoard::_getUserInput() const

@@ -11,9 +11,9 @@ class BoggleBoard {
     // Helper method for building the `_frequencyTable`
     // this table is based on the letter frequencies
     // in the provided `_dict`, not a general frequency count.
-    void _buildFrequencyTable(const string& wordListFileName);
+    vector<int> _buildFrequencyTable(const string& wordListFileName) const;
     // Take sum of frequency values in `_frequencyTable`.
-    void _calcFrequencySum();
+    int _calcFrequencySum() const;
     // Helper method to build the actual boggle board.
     void _buildBoard();
     // Method to get user input.
@@ -29,31 +29,27 @@ class BoggleBoard {
     
     // Helper method for constructors.
     void _copy(const BoggleBoard& orig);
+
 public:
-    // Default constructor
-    BoggleBoard(const Dictionary& dict, const string& wordListFileName);
-    // Copy constructor
-    BoggleBoard(const BoggleBoard& orig) { _copy(orig); }
-    // Copy assignment operator
-    BoggleBoard& operator=(const BoggleBoard& orig);
-    // Destructor
-    ~BoggleBoard() { _dict = nullptr; }
+    BoggleBoard(const Dictionary& dict, const string& wordListFileName); // Default constructor
+    BoggleBoard(const BoggleBoard& orig) { _copy(orig); } // Copy constructor
+    BoggleBoard& operator=(const BoggleBoard& orig); // Copy assignment operator
+    ~BoggleBoard() { _dict = nullptr; } // Destructor
     
     // Method to begin playing the game.
     void play(ostream& outputStream);
     // Method to print the board.
     void printBoard(ostream& outputStream) const;
 
-    
 private:
     /* === Constants === */
     const unsigned int COLS = 5;
     const unsigned int ROWS = 5;
 
     /* === Private variables === */
-    const Dictionary* _dict;
-    vector<int> _frequencyTable;
-    int _frequencySum;
-    vector<vector<char>> _board;
+    int                   _frequencySum;
+    const Dictionary*     _dict;
+    vector<int>           _frequencyTable;
+    vector<vector<char>>  _board;
 
 };
