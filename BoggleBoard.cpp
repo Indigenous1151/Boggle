@@ -3,6 +3,7 @@
 #include <set>
 #include <fstream>
 #include <sstream>
+#include <numeric>
 #include "BoggleBoard.h"
 #include "weightedRand.h"
 
@@ -74,12 +75,26 @@ void BoggleBoard::play(std::ostream& outputStream)
 
 void BoggleBoard::printBoard(std::ostream& outputStream) const
 {
-    outputStream << "Boggle Board:\n";
+    int indexNum = 0;
+    outputStream << "Boggle Board         Indices\n\n";
     for (vector<char> row : _board)
     {
+        outputStream << "  "; // two spaces before board
+        // letters in board
         for (char element : row)
             outputStream << element << ' ';
         
+        outputStream << "  |  "; // gap between board and relative index board
+
+        for (int i = 0; i < row.size(); i++)
+        {
+            // move index over by one to compensate for single digit
+            if (indexNum < 10)
+                outputStream << ' ';
+            
+            outputStream << indexNum++ << ' '; // print index
+        }
+
         outputStream << '\n';
     }    
     outputStream << endl;
@@ -131,10 +146,7 @@ vector<int> BoggleBoard::_buildFrequencyTable(const string& wordListFileName) co
 
 int BoggleBoard::_calcFrequencySum() const
 {
-    int sum = 0;
-    for (int num : _frequencyTable)
-        sum += num;
-    return sum;
+    return accumulate(_frequencyTable.begin(), _frequencyTable.end(), 0);
 }
 
 string BoggleBoard::_getUserInput() const
